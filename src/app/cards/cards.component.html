@@ -1,0 +1,102 @@
+<div class="container mt-5">
+    <!-- Alert Section -->
+    <div *ngIf="alertMessage" class="alert" [ngClass]="alertType" role="alert">
+      {{ alertMessage }}
+    </div>
+  
+    <!-- Create Note Button -->
+    <button type="button" class="btn btn-warning mb-4" data-bs-toggle="modal" data-bs-target="#addNoteModel">
+      <i class="bi bi-file-plus"></i> Create Note
+    </button>
+  
+    <!-- Notes Grid -->
+    <div class="row g-4">
+      <div class="col-md-4" *ngFor="let note of notes">
+        <div class="card shadow-sm border-0">
+          <img *ngIf="note.imageUrl" [src]="note.imageUrl" class="card-img-top" alt="Note Image" />
+          <div class="card-body">
+            <h5 class="card-title text-secondary">{{ note.title }}</h5>
+            <p class="card-text text-muted">{{ note.description }}</p>
+  
+            <!-- Edit and Delete Buttons -->
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <button class="btn btn-warning btn-sm" (click)="openEditModal(note)">
+                <i class="bi bi-pencil"></i> Edit
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="onDeleteNote(note.id)">
+                <i class="bi bi-trash"></i> Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Add Note Modal -->
+    <div class="modal fade" id="addNoteModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Add Daily Note</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form #addNoteForm="ngForm" (ngSubmit)="onAddNote(addNoteForm)">
+              <div class="mb-3">
+                <label for="title" class="form-label">Note Title:</label>
+                <input type="text" class="form-control" name="title" required ngModel placeholder="Enter your note title" />
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Note Description:</label>
+                <textarea class="form-control" name="description" required ngModel placeholder="Write your note here..."></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="image" class="form-label">Upload Image:</label>
+                <input type="file" class="form-control" (change)="onImageSelected($event)" />
+              </div>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary" [disabled]="!addNoteForm.valid">
+                  <i class="bi bi-check-lg"></i> Add Note
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Edit Note Modal -->
+    <div class="modal fade" id="editNoteModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Note</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="onUpdateNote()">
+              <div class="mb-3">
+                <label for="title" class="form-label">Note Title:</label>
+                <input type="text" class="form-control" [(ngModel)]="currentNote.title" name="title" required placeholder="Edit note title" />
+              </div>
+              <div class="mb-3">
+                <label for="description" class="form-label">Note Description:</label>
+                <textarea class="form-control" [(ngModel)]="currentNote.description" name="description" required placeholder="Edit note description"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="image" class="form-label">Upload Image:</label>
+                <input type="file" class="form-control" (change)="onImageSelected($event, true)" />
+              </div>
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary" [disabled]="!currentNote.title || !currentNote.description">
+                  <i class="bi bi-save"></i> Update Note
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  
